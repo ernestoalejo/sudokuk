@@ -33,8 +33,6 @@ public:
   friend std::ostream& operator<<(std::ostream& os, const Sudoku& s);
 
 private:
-  DISALLOW_COPY_AND_ASSIGN(Sudoku);
-
   int8_t* answer;
   int8_t** available;
   int8_t* sizes;
@@ -46,7 +44,7 @@ private:
 
   void clearRow(int col, int row, int8_t value);
   void clearCol(int col, int row, int8_t value);
-  void clearCage(int cage, int8_t value);
+  void clearCage(int col, int row, int8_t value);
 
   int getCage(int x, int y);
 
@@ -56,6 +54,8 @@ private:
   bool checkSolved();
 
   bool killerCombinations();
+
+  DISALLOW_COPY_AND_ASSIGN(Sudoku);
 };
 
 

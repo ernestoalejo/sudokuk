@@ -13,7 +13,7 @@ using std::vector;
 
 
 int main(int argc, char* argv[]) {
-  if(argc != 2) {
+  if (argc != 2) {
     cerr << "usage: " << argv[0] << " [data_filename]" << endl << endl;
     return 1;
   }
@@ -21,7 +21,7 @@ int main(int argc, char* argv[]) {
   Sudoku sudoku;
 
   ifstream data(argv[1]);
-  if(!data) {
+  if (!data) {
     cerr << "cannot open the data file" << endl;
     return 2;
   }
@@ -29,19 +29,19 @@ int main(int argc, char* argv[]) {
   int cages;
   data >> cages;
 
-  for(int i = 0; i < cages; i++) {
+  for (int i = 0; i < cages; i++) {
     int sum;
     int ncells;
     data >> sum >> ncells;
 
     vector<Cell> cells(ncells);
 
-    for(int j = 0; j < ncells; j++) {
+    for (int j = 0; j < ncells; j++) {
       int x, y;
       char c;
       data >> x >> c >> y;
 
-      if(c != ',') {
+      if (c != ',') {
         cerr << "coordinates without a colon between them" << endl;
         return 3;
       }
