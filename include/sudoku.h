@@ -49,11 +49,15 @@ private:
   int getCage(int x, int y);
 
   void removeAvailable(int col, int row, int8_t value);
+  void setAvailable(int col, int row, const std::vector<int>& values);
 
   void setSolvedCell(int x, int y, int8_t value);
   bool checkSolved();
 
-  bool killerCombinations();
+  // Run-Once-At-Start startegies
+  void killerCombinations();
+
+  // Run-In-A-Loop strategies
 
   DISALLOW_COPY_AND_ASSIGN(Sudoku);
 };

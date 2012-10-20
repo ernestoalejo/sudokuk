@@ -83,9 +83,9 @@ ostream& operator<<(ostream& os, const Sudoku& s) {
 
     for (int j = 0; j < BOARD_COLS; j++) {
       if (j%3 == 0)
-        cout << " |";
-
-      cout << " ";
+        cout << " | ";
+      else
+        cout << "-";
 
       int idx = 0;
       for (int k = 0; k < 9; k++) {
@@ -130,14 +130,10 @@ ostream& operator<<(ostream& os, const Sudoku& s) {
 
 
 void Sudoku::addCage(int8_t sum, const vector<Cell>& cells) {
-  if (cells.size() == 1) {
-    setSolvedCell(cells[0].x, cells[0].y, sum);
-  } else {
-    Cage cage;
-    cage.sum = sum;
-    cage.cells = cells;
-    cages.push_back(cage);
-  }
+  Cage cage;
+  cage.sum = sum;
+  cage.cells = cells;
+  cages.push_back(cage);
 }
 
 
@@ -211,6 +207,21 @@ void Sudoku::removeAvailable(int col, int row, int8_t value) {
 }
 
 
+void Sudoku::setAvailable(int col, int row, const vector<int>& values) {
+  int idx = row*BOARD_COLS + col;
+
+  delete [] available[idx];
+  sizes[idx] = values.size();
+
+  int8_t* modified = new int8_t[sizes[idx]];
+  available[idx] = modified;
+
+  for (int i = 0; i < sizes[idx]; i++) {
+    available[idx][i] = values[i];
+  }
+}
+
+
 bool Sudoku::checkSolved() {
   for (int i = 0; i < BOARD_SIZE; i++) {
     if (answer[i] == 0)
@@ -221,9 +232,12 @@ bool Sudoku::checkSolved() {
 
 
 void Sudoku::solve() {
+  killerCombinations();
+
+  return;
+
   while (1) {
     if (checkSolved()) break;
-    if (killerCombinations()) continue;
 
     cout << "Cannot solve this puzzle! We run out of strategies!" << endl;
     break;

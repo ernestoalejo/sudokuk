@@ -2,4 +2,4 @@
  To Do
  ~~~~~
 
- * Implement the killer combinations strategy.
+ * Add a checkSolved() method.
