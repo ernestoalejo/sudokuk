@@ -1,6 +1,8 @@
 package strategies
 
 import (
+	"fmt"
+
 	"github.com/ernestokarim/sudokuk/domain"
 )
 
@@ -27,7 +29,7 @@ func scanRow(s *domain.Sudoku) (bool, error) {
 		count := make([]int, 9)
 		lastCol := make([]int, 9)
 
-		// Scan the rows
+		// Scan the cols
 		for j := 0; j < domain.BOARD_COLS; j++ {
 			for _, a := range s.Available[i*domain.BOARD_COLS+j] {
 				count[a-1]++
@@ -42,11 +44,13 @@ func scanRow(s *domain.Sudoku) (bool, error) {
 				continue
 			}
 
-			if s.Answer[j*domain.BOARD_COLS+lastCol[j]] != 0 {
+			if s.Answer[i*domain.BOARD_COLS+lastCol[j]] != 0 {
 				continue
 			}
 
-			if err := s.SolveCell(i, lastCol[j], int8(c)); err != nil {
+			fmt.Printf(" * Solving hidden single (row): %dx%d (%d)\n", lastCol[j], i, j+1)
+
+			if err := s.SolveCell(i, lastCol[j], int8(j+1)); err != nil {
 				return false, err
 			}
 
@@ -62,7 +66,7 @@ func scanCol(s *domain.Sudoku) (bool, error) {
 		count := make([]int, 9)
 		lastRow := make([]int, 9)
 
-		// Scan the cols
+		// Scan the rows
 		for j := 0; j < domain.BOARD_ROWS; j++ {
 			for _, a := range s.Available[j*domain.BOARD_COLS+i] {
 				count[a-1]++
@@ -80,7 +84,9 @@ func scanCol(s *domain.Sudoku) (bool, error) {
 				continue
 			}
 
-			if err := s.SolveCell(lastRow[j], i, int8(c)); err != nil {
+			fmt.Printf(" * Solving hidden single (col): %dx%d (%d)\n", i, lastRow[j], j+1)
+
+			if err := s.SolveCell(lastRow[j], i, int8(j+1)); err != nil {
 				return false, err
 			}
 

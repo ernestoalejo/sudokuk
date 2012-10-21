@@ -144,6 +144,9 @@ func (s *Sudoku) Solved() bool {
 func (s *Sudoku) SolvedSquares() (modified bool, e error) {
 	for i, available := range s.Available {
 		if s.Answer[i] == 0 && len(available) == 1 {
+			fmt.Printf(" * Found solved square: %dx%d: %d\n", i/BOARD_COLS,
+				i%BOARD_COLS, available[0])
+
 			if err := s.SolveCell(i/BOARD_COLS, i%BOARD_COLS, available[0]); err != nil {
 				return false, err
 			}
