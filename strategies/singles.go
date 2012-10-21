@@ -1,6 +1,5 @@
 package strategies
 
-/*
 import (
 	"fmt"
 
@@ -38,10 +37,11 @@ func scanRow(s *domain.Sudoku) (bool, error) {
 
 		// Scan the cols
 		for j := 0; j < domain.BOARD_COLS; j++ {
-			for _, a := range s.Available[i*domain.BOARD_COLS+j] {
-				count[a-1]++
-				lastCol[a-1] = j
-
+			for n, mask := range AV_LIST {
+				if s.Available[i*domain.BOARD_COLS+j]&mask == mask {
+					count[n]++
+					lastCol[n] = j
+				}
 			}
 		}
 
@@ -57,7 +57,7 @@ func scanRow(s *domain.Sudoku) (bool, error) {
 
 			fmt.Printf(" * Solving hidden single (row): %dx%d (%d)\n", lastCol[j], i, j+1)
 
-			if err := s.SolveCell(i, lastCol[j], int8(j+1)); err != nil {
+			if err := s.SolveCell(i, lastCol[j], uint(j+1)); err != nil {
 				return false, err
 			}
 
@@ -75,9 +75,11 @@ func scanCol(s *domain.Sudoku) (bool, error) {
 
 		// Scan the rows
 		for j := 0; j < domain.BOARD_ROWS; j++ {
-			for _, a := range s.Available[j*domain.BOARD_COLS+i] {
-				count[a-1]++
-				lastRow[a-1] = j
+			for n, mask := range AV_LIST {
+				if s.Available[j*domain.BOARD_COLS+i]&mask == mask {
+					count[n]++
+					lastRow[n] = j
+				}
 			}
 		}
 
@@ -93,7 +95,7 @@ func scanCol(s *domain.Sudoku) (bool, error) {
 
 			fmt.Printf(" * Solving hidden single (col): %dx%d (%d)\n", i, lastRow[j], j+1)
 
-			if err := s.SolveCell(lastRow[j], i, int8(j+1)); err != nil {
+			if err := s.SolveCell(lastRow[j], i, uint(j+1)); err != nil {
 				return false, err
 			}
 
@@ -116,10 +118,12 @@ func scanCage(s *domain.Sudoku) (bool, error) {
 
 			for row := i * 3; row < i*3+3; row++ {
 				for col := j * 3; col < j*3+3; col++ {
-					for _, a := range s.Available[row*domain.BOARD_COLS+col] {
-						count[a-1]++
-						lastRow[a-1] = row
-						lastCol[a-1] = col
+					for n, mask := range AV_LIST {
+						if s.Available[row*domain.BOARD_COLS+col]&mask == mask {
+							count[n]++
+							lastRow[n] = row
+							lastCol[n] = col
+						}
 					}
 				}
 			}
@@ -136,7 +140,7 @@ func scanCage(s *domain.Sudoku) (bool, error) {
 
 				fmt.Printf(" * Solving hidden single (cage): %dx%d (%d)\n", lastCol[j], lastRow[j], j+1)
 
-				if err := s.SolveCell(lastRow[j], lastCol[j], int8(j+1)); err != nil {
+				if err := s.SolveCell(lastRow[j], lastCol[j], uint(j+1)); err != nil {
 					return false, err
 				}
 
@@ -147,4 +151,3 @@ func scanCage(s *domain.Sudoku) (bool, error) {
 
 	return false, nil
 }
-*/

@@ -25,6 +25,10 @@ const (
 	AV_ALL = AV_1 | AV_2 | AV_3 | AV_4 | AV_5 | AV_6 | AV_7 | AV_8 | AV_9
 )
 
+var (
+	AV_LIST = [9]uint{AV_1, AV_2, AV_3, AV_4, AV_5, AV_6, AV_7, AV_8, AV_9}
+)
+
 type Sudoku struct {
 	Cages     []*Cage
 	Answer    []int8

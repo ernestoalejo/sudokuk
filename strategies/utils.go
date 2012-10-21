@@ -17,3 +17,7 @@ const (
 
 	AV_ALL = domain.AV_ALL
 )
+
+var (
+	AV_LIST = domain.AV_LIST
+)

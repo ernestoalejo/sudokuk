@@ -40,8 +40,8 @@ func solve(s *domain.Sudoku) error {
 	// List of strategies we can apply, ordered from simpler and quicker to
 	// more complex and slower
 	slist := []Strategy{
-	//strategies.HiddenSingles,
-	//strategies.NakedPairs,
+		strategies.HiddenSingles,
+		//strategies.NakedPairs,
 	}
 
 	for {
