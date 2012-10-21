@@ -1,4 +1,4 @@
 sudokuk
 =======
 
-A Sudoku Killer solver made in C++
+A Sudoku Killer solver made in Go
