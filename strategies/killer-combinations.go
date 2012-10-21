@@ -56,6 +56,8 @@ var combinations = map[int]map[int8][]int8{
 	},
 }
 
+// Only some combinations are possible with a given (sum,no of cells) pair.
+// With that fact, remove all the other available answers.
 func KillerCombinations(s *domain.Sudoku) error {
 	for _, cage := range s.Cages {
 		m, ok := combinations[len(cage.Cells)]
