@@ -41,7 +41,7 @@ func solve(s *domain.Sudoku) error {
 	// more complex and slower
 	slist := []Strategy{
 		strategies.HiddenSingles,
-		//strategies.NakedPairs,
+		strategies.NakedPairs,
 	}
 
 	for {

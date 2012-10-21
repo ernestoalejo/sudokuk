@@ -55,7 +55,7 @@ func scanRow(s *domain.Sudoku) (bool, error) {
 				continue
 			}
 
-			fmt.Printf(" * Solving hidden single (row): %dx%d (%d)\n", lastCol[j], i, j+1)
+			fmt.Printf(" * Solving hidden single [row]: %dx%d (%d)\n", lastCol[j], i, j+1)
 
 			if err := s.SolveCell(i, lastCol[j], uint(j+1)); err != nil {
 				return false, err
@@ -93,7 +93,7 @@ func scanCol(s *domain.Sudoku) (bool, error) {
 				continue
 			}
 
-			fmt.Printf(" * Solving hidden single (col): %dx%d (%d)\n", i, lastRow[j], j+1)
+			fmt.Printf(" * Solving hidden single [col]: %dx%d (%d)\n", i, lastRow[j], j+1)
 
 			if err := s.SolveCell(lastRow[j], i, uint(j+1)); err != nil {
 				return false, err
@@ -138,7 +138,7 @@ func scanCage(s *domain.Sudoku) (bool, error) {
 					continue
 				}
 
-				fmt.Printf(" * Solving hidden single (cage): %dx%d (%d)\n", lastCol[j], lastRow[j], j+1)
+				fmt.Printf(" * Solving hidden single [cage]: %dx%d (%d)\n", lastCol[j], lastRow[j], j+1)
 
 				if err := s.SolveCell(lastRow[j], lastCol[j], uint(j+1)); err != nil {
 					return false, err

@@ -143,10 +143,10 @@ func (s *Sudoku) Solved() bool {
 
 func (s *Sudoku) SolvedSquares() (modified bool, e error) {
 	for i, av := range s.Available {
-		if s.Answer[i] == 0 && bitsSet(av) == 1 {
+		if s.Answer[i] == 0 && BitsSet(av) == 1 {
 			fmt.Printf(" * Found solved square %d: %dx%d: %d\n", i, i/BOARD_COLS, i%BOARD_COLS, av)
 
-			if err := s.SolveCell(i/BOARD_COLS, i%BOARD_COLS, bitSet(av)+1); err != nil {
+			if err := s.SolveCell(i/BOARD_COLS, i%BOARD_COLS, BitSet(av)+1); err != nil {
 				return false, err
 			}
 
