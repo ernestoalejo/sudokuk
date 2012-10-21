@@ -21,6 +21,12 @@ func HiddenSingles(s *domain.Sudoku) (bool, error) {
 		return true, nil
 	}
 
+	if done, err := scanCage(s); err != nil {
+		return false, nil
+	} else if done {
+		return true, nil
+	}
+
 	return false, nil
 }
 
@@ -91,6 +97,50 @@ func scanCol(s *domain.Sudoku) (bool, error) {
 			}
 
 			return true, nil
+		}
+	}
+
+	return false, nil
+}
+
+func scanCage(s *domain.Sudoku) (bool, error) {
+	rows := domain.BOARD_ROWS / 3
+	cols := domain.BOARD_COLS / 3
+
+	for i := 0; i < rows; i++ {
+		for j := 0; j < cols; j++ {
+			count := make([]int, 9)
+			lastRow := make([]int, 9)
+			lastCol := make([]int, 9)
+
+			for row := i * 3; row < i*3+3; row++ {
+				for col := j * 3; col < j*3+3; col++ {
+					for _, a := range s.Available[row*domain.BOARD_COLS+col] {
+						count[a-1]++
+						lastRow[a-1] = row
+						lastCol[a-1] = col
+					}
+				}
+			}
+
+			// A hidden single in the cage has been found, solve it
+			for j, c := range count {
+				if c != 1 {
+					continue
+				}
+
+				if s.Answer[lastRow[j]*domain.BOARD_COLS+lastCol[j]] != 0 {
+					continue
+				}
+
+				fmt.Printf(" * Solving hidden single (cage): %dx%d (%d)\n", lastCol[j], lastRow[j], j+1)
+
+				if err := s.SolveCell(lastRow[j], lastCol[j], int8(j+1)); err != nil {
+					return false, err
+				}
+
+				return true, nil
+			}
 		}
 	}
 
