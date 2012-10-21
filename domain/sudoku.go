@@ -11,16 +11,31 @@ const (
 	BOARD_SIZE = BOARD_COLS * BOARD_ROWS
 )
 
+const (
+	AVAILABLE_1 = 1 << iota
+	AVAILABLE_2
+	AVAILABLE_3
+	AVAILABLE_4
+	AVAILABLE_5
+	AVAILABLE_6
+	AVAILABLE_7
+	AVAILABLE_8
+	AVAILABLE_9
+
+	AVAILABLE_ALL = AVAILABLE_1 | AVAILABLE_2 | AVAILABLE_3 | AVAILABLE_4 |
+		AVAILABLE_5 | AVAILABLE_6 | AVAILABLE_7 | AVAILABLE_8 | AVAILABLE_9
+)
+
 type Sudoku struct {
 	Cages     []*Cage
 	Answer    []int8
-	Available [][]int8
+	Available []int
 }
 
 func NewSudoku() *Sudoku {
-	available := make([][]int8, BOARD_SIZE)
+	available := make([]int, BOARD_SIZE)
 	for i, _ := range available {
-		available[i] = []int8{1, 2, 3, 4, 5, 6, 7, 8, 9}
+		available[i] = AVAILABLE_ALL
 	}
 
 	return &Sudoku{
@@ -62,15 +77,14 @@ func (s *Sudoku) Print() {
 			}
 
 			idx := i*BOARD_COLS + j
-			var n int
+
+			var n uint
 			var k int8
 			for ; k < 9; k++ {
-				if k+1 == s.Available[idx][n] {
+				mask := 1 << n
+				if s.Available[idx]&mask == mask {
 					fmt.Print(k + 1)
-
-					if n+1 < len(s.Available[idx]) {
-						n++
-					}
+					n++
 				} else {
 					fmt.Print(" ")
 				}
@@ -110,6 +124,7 @@ func (s *Sudoku) Print() {
 	fmt.Println(" -------------------------")
 }
 
+/*
 func (s *Sudoku) SetAvailable(row, col int8, av []int8) {
 	s.Available[row*BOARD_COLS+col] = make([]int8, len(av))
 	copy(s.Available[row*BOARD_COLS+col], av)
@@ -208,7 +223,7 @@ func (s *Sudoku) SolveCell(row, col int, sol int8) error {
 
 	return nil
 }
-
+*/
 func (s *Sudoku) readCages(f *os.File) error {
 	var ncages int
 	fmt.Fscan(f, &ncages)
