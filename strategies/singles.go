@@ -1,5 +1,6 @@
 package strategies
 
+/*
 import (
 	"fmt"
 
@@ -146,3 +147,4 @@ func scanCage(s *domain.Sudoku) (bool, error) {
 
 	return false, nil
 }
+*/

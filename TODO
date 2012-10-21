@@ -2,6 +2,4 @@
  To Do
  ~~~~~
 
- * Change the implementation of the available numbers to only one int16 and
-   bitwise operations to extract the bits.
  * Implement the naked pairs strategy.

@@ -12,35 +12,29 @@ const (
 )
 
 const (
-	AVAILABLE_1 = 1 << iota
-	AVAILABLE_2
-	AVAILABLE_3
-	AVAILABLE_4
-	AVAILABLE_5
-	AVAILABLE_6
-	AVAILABLE_7
-	AVAILABLE_8
-	AVAILABLE_9
+	AV_1 = 1 << iota
+	AV_2
+	AV_3
+	AV_4
+	AV_5
+	AV_6
+	AV_7
+	AV_8
+	AV_9
 
-	AVAILABLE_ALL = AVAILABLE_1 | AVAILABLE_2 | AVAILABLE_3 | AVAILABLE_4 |
-		AVAILABLE_5 | AVAILABLE_6 | AVAILABLE_7 | AVAILABLE_8 | AVAILABLE_9
+	AV_ALL = AV_1 | AV_2 | AV_3 | AV_4 | AV_5 | AV_6 | AV_7 | AV_8 | AV_9
 )
 
 type Sudoku struct {
 	Cages     []*Cage
 	Answer    []int8
-	Available []int
+	Available []uint
 }
 
 func NewSudoku() *Sudoku {
-	available := make([]int, BOARD_SIZE)
-	for i, _ := range available {
-		available[i] = AVAILABLE_ALL
-	}
-
 	return &Sudoku{
 		Answer:    make([]int8, BOARD_SIZE),
-		Available: available,
+		Available: make([]uint, BOARD_SIZE),
 	}
 }
 
@@ -78,13 +72,11 @@ func (s *Sudoku) Print() {
 
 			idx := i*BOARD_COLS + j
 
-			var n uint
-			var k int8
+			var k uint
 			for ; k < 9; k++ {
-				mask := 1 << n
+				var mask uint = 1 << k
 				if s.Available[idx]&mask == mask {
 					fmt.Print(k + 1)
-					n++
 				} else {
 					fmt.Print(" ")
 				}
@@ -124,24 +116,13 @@ func (s *Sudoku) Print() {
 	fmt.Println(" -------------------------")
 }
 
-/*
-func (s *Sudoku) SetAvailable(row, col int8, av []int8) {
-	s.Available[row*BOARD_COLS+col] = make([]int8, len(av))
-	copy(s.Available[row*BOARD_COLS+col], av)
-}
-
-func (s *Sudoku) RemoveAvailable(row, col int, value int8) error {
+func (s *Sudoku) RemoveAvailable(row, col int, value uint) error {
 	idx := row*BOARD_COLS + col
 
-	for i, n := range s.Available[idx] {
-		if n == value {
-			if len(s.Available[idx]) == 1 {
-				return NewErrorf("cannot remove the last available number: %dx%d", row, col)
-			}
+	s.Available[idx] &^= 1 << (value - 1)
 
-			s.Available[idx] = append(s.Available[idx][:i], s.Available[idx][i+1:]...)
-			return nil
-		}
+	if s.Available[idx] == 0 {
+		return NewErrorf("cannot remove the last available number: %dx%d", col, row)
 	}
 
 	return nil
@@ -157,12 +138,11 @@ func (s *Sudoku) Solved() bool {
 }
 
 func (s *Sudoku) SolvedSquares() (modified bool, e error) {
-	for i, available := range s.Available {
-		if s.Answer[i] == 0 && len(available) == 1 {
-			fmt.Printf(" * Found solved square: %dx%d: %d\n", i/BOARD_COLS,
-				i%BOARD_COLS, available[0])
+	for i, av := range s.Available {
+		if s.Answer[i] == 0 && bitsSet(av) == 1 {
+			fmt.Printf(" * Found solved square %d: %dx%d: %d\n", i, i/BOARD_COLS, i%BOARD_COLS, av)
 
-			if err := s.SolveCell(i/BOARD_COLS, i%BOARD_COLS, available[0]); err != nil {
+			if err := s.SolveCell(i/BOARD_COLS, i%BOARD_COLS, bitSet(av)+1); err != nil {
 				return false, err
 			}
 
@@ -173,13 +153,11 @@ func (s *Sudoku) SolvedSquares() (modified bool, e error) {
 	return modified, nil
 }
 
-func (s *Sudoku) SolveCell(row, col int, sol int8) error {
+func (s *Sudoku) SolveCell(row, col int, sol uint) error {
 	idx := row*BOARD_COLS + col
 
-	s.Answer[idx] = sol
-	if len(s.Available[idx]) != 1 {
-		s.Available[idx] = []int8{sol}
-	}
+	s.Answer[idx] = int8(sol)
+	s.Available[idx] = 1 << (sol - 1)
 
 	// Clear the row
 	for i := 0; i < BOARD_ROWS; i++ {
@@ -223,7 +201,7 @@ func (s *Sudoku) SolveCell(row, col int, sol int8) error {
 
 	return nil
 }
-*/
+
 func (s *Sudoku) readCages(f *os.File) error {
 	var ncages int
 	fmt.Fscan(f, &ncages)
