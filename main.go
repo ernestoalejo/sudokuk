@@ -27,10 +27,26 @@ func main() {
 }
 
 func solve(s *domain.Sudoku) error {
+	defer s.Print()
+
 	if err := strategies.KillerCombinations(s); err != nil {
 		return err
 	}
 
-	s.Print()
+	for {
+		if s.Solved() {
+			break
+		}
+
+		if done, err := s.SolvedSquares(); err != nil {
+			return err
+		} else if done {
+			continue
+		}
+
+		fmt.Println("No more strategies to do! Puzzle can't be resolved!")
+		break
+	}
+
 	return nil
 }
