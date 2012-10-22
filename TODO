@@ -3,5 +3,6 @@
  ~~~~~
 
  * Implement the naked triples. 
+ * Move the SolvedSquares method to the naked singles strategy.
  * Implement the naked pairs for a cage.
  * Implement the naked quads.

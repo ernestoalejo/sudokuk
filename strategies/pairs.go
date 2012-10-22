@@ -42,15 +42,13 @@ func scanNakedPairsRows(s *domain.Sudoku) (bool, error) {
 					continue
 				}
 
-				s.Print()
-
 				logged := false
 				for applyX := 0; applyX < domain.BOARD_COLS; applyX++ {
 					idx := i*domain.BOARD_COLS + applyX
 
 					// Ignore the two answers containing the pair, as well
 					// as cells where the strategy has no effect.
-					if applyX == j || applyX == scanX || s.Available[idx]&v != v {
+					if applyX == j || applyX == scanX || s.Available[idx]&v == 0 {
 						continue
 					}
 
@@ -95,7 +93,7 @@ func scanNakedPairsCols(s *domain.Sudoku) (bool, error) {
 
 					// Ignore the two answers containing the pair, as well
 					// as cells where the strategy has no effect.
-					if applyY == i || applyY == scanY || s.Available[idx]&v != v {
+					if applyY == i || applyY == scanY || s.Available[idx]&v == 0 {
 						continue
 					}
 
